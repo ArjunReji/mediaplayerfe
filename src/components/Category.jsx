@@ -117,9 +117,11 @@ function Category() {
               <button className='btn btn-danger' onClick={() => deleteCategory(item.id)}><i class="fa-solid fa-trash"></i></button>
               {
                 item.allVideos?.length>0?
+                <div className='d-flex flex-column'>
                 item.allVideos.map(video=>(
                     <img src={video.thumbnailUrl} alt="" height={"100px"} width={"100%"} className='mt-2'/>
-                )):
+                ))
+                </div>:
                 <p>No Item Found</p>
               }
             
