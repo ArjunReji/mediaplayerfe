@@ -12,42 +12,45 @@ function VideoCard({ displayVideo, setDeleteVideoStatus }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = async() =>{
-    
+  const handleShow = async () => {
+
     setShow(true);
-    const {caption, embededLink}= displayVideo;
+    const { caption, embededLink } = displayVideo;
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth()+1).padStart(2,'0');
-    const day = String(today.getDate()).padStart(2,'0');
-    const hour = String(today.getHours()).padStart(2,'0');
-    const minutes = String(today.getMinutes()).padStart(2,'0');
-    const timeValue = day+'-'+month+"-"+year+" "+hour+":"+minutes;
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const hour = String(today.getHours()).padStart(2, '0');
+    const minutes = String(today.getMinutes()).padStart(2, '0');
+    const timeValue = day + '-' + month + "-" + year + " " + hour + ":" + minutes;
     console.log(timeValue);
-    const history ={
-        caption: caption,
-        embededLink: embededLink,
-        timeStamp:timeValue
+    const history = {
+      caption: caption,
+      embededLink: embededLink,
+      timeStamp: timeValue
 
     }
     await addToHistory(history)
-    
 
-  }; 
+
+  };
 
   const removeVideo = async (id) => {
     const response = await deleteVideo(id)
     console.log(response);
-    if(response.status===200){
+    if (response.status === 200) {
       setDeleteVideoStatus(response)
       toast.success(`${displayVideo.caption} successfully deleted`)
     }
   }
-
+  const dragStarted = (e, id) => {
+    console.log(`video with ${id} started dragging`);
+    e.dataTransfer.setData("videoId", id)
+  }
   return (
     <>
 
-      <Card style={{ width: '15rem', height: '300px' }}>
+      <Card style={{ width: '15rem', height: '300px' }} draggable onDragStart={(e) => dragStarted(e, displayVideo.id)}>
         <Card.Img variant="top" onClick={handleShow} height={'200px'} src={displayVideo.thumbnailUrl} />
 
         <Card.Body>
@@ -77,7 +80,7 @@ function VideoCard({ displayVideo, setDeleteVideoStatus }) {
           <Button variant="primary">Understood</Button>
         </Modal.Footer>
       </Modal>
-      
+
     </>
   )
 }

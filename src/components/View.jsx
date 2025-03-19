@@ -18,9 +18,7 @@ function View({uploadVideoStatus,}) {
 
   const getVideos = async () => {
     const resp = await getAllVideos()
-    console.log(resp);
     const { data } = resp;
-    console.log(data);
     setallVideos(data)
   }
   useEffect(() => {

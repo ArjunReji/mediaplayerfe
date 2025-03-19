@@ -5,6 +5,15 @@ import { commonApi } from "./commonApi";
 export const uploadVideo = async (reqBody) => {
   return await commonApi('POST', `${serverurl}/videos`, reqBody)
 }
+// 
+export const getVideoDetailsById = async(id) =>{
+  return await commonApi('GET',`${serverurl}/videos/${id}`,'')
+}
+
+//  update category
+export const updateCategory = async (id,data)=>{
+  return await commonApi('PUT',`${serverurl}/categories/${id}`,data)
+}
 
 // get all videos api call
 
@@ -47,3 +56,4 @@ export const deleteVideoCategory = async (data)=>{
 export const getAllCategories = async ()=>{
   return await commonApi('GET',`${serverurl}/categories`,"")
 }
+

@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { addCategory, deleteVideoCategory, getAllCategories } from '../services/allApi';
+import { addCategory, deleteVideoCategory, getAllCategories, getVideoDetailsById, updateCategory } from '../services/allApi';
 
 function Category() {
   const [show, setShow] = useState(false);
@@ -51,6 +51,27 @@ function Category() {
     }
 
   }
+  const dragOver = (e) => {
+    e.preventDefault()
+
+  }
+
+  const videoDropped = async (e, id) => {
+    console.log(`dropped inside ${id}`);
+    const vId = e.dataTransfer.getData('videoId');
+    console.log(`Video with id ${vId} is dropped in Category with Id ${id}`);
+    const result = await getVideoDetailsById(vId)
+    const { data } = result;
+    let selectedCategory = categories?.find((item => item.id == id))
+    console.log("Selected category");
+    console.log(selectedCategory);
+    selectedCategory.allVideos.push(data);
+    console.log("final ACtegory");
+    console.log(selectedCategory);
+    const result_new = await updateCategory(id,selectedCategory) 
+    
+  }
+
 
   return (
     <>
@@ -87,10 +108,21 @@ function Category() {
 
       {
         categories?.map(item => (
-          <div className='border border-secondary rounded p-3 mt-5'>
+          <div className='border border-secondary rounded p-3 mt-5' droppable
+            onDragOver={(e) => dragOver(e)}
+            onDrop={(e) => videoDropped(e, item.id)}
+          >
             <div className='d-flex justify-content-between align-items-center'>
               <h6>{item.categoryName}</h6>
               <button className='btn btn-danger' onClick={() => deleteCategory(item.id)}><i class="fa-solid fa-trash"></i></button>
+              {
+                item.allVideos?.length>0?
+                item.allVideos.map(video=>(
+                    <img src={video.thumbnailUrl} alt="" height={"100px"} width={"100%"} className='mt-2'/>
+                )):
+                <p>No Item Found</p>
+              }
+            
             </div>
           </div>
         ))
